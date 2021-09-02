@@ -1,38 +1,122 @@
 .App {
+  margin-left: 50px;
+  margin-top: 50px;
+}
+
+#imageWindow{
+  height: 77vh;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+input[type=text] {
+  display: block;
+  font-size: 24px;
+  margin: 8px;
+  width: 350px;
+}
+
+.controller-buttons {
+  margin-top: 16px;
+}
+
+.button {
+  margin-right: 24px;
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
   text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.button.button-submit {
+  background-color: #f43f1a;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.button.button-submit:hover {
+  background-color: #f7785e
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.button.button-submit:active {
+  background-color: #f7785e
+}
+
+.button.button-info {
+  background-color: #245582;
+}
+
+.button.button-info:hover {
+  background-color: #2E6BA3
+}
+
+.button.button-info:active {
+  background-color: #2E6BA3
+}
+
+.button:hover {
+  background-color: #3e8e41
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.Categorizer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row;
 }
 
-.App-link {
-  color: #61dafb;
+.categorizer-form-div {
+  width: 420px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.categorizer-image-window {
+  flex-grow: 1;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 75vh;
+}
+
+.payload-peek {
+  border: 2px #666 solid;
+  padding: 8px;
+  margin-right: 50px;
+  margin-bottom: 24px;
+}
+
+.category-modal { 
+  position: absolute;
+  top:50%;
+  left:50%;
+  width: 60%;
+  height: 80vh;
+  transform: translate(-50%, -50%);
+  background-color:bisque;
+  border-radius: 18px;
+  border: 2px solid black;
+  white-space: pre-wrap;
+  padding: 16px;
+  overflow: scroll;
+}
+
+.close-btn {
+  color: #f43f1a;
+  font-size: 24px;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  width: 100px;
+  text-align: center;
+  padding: 6px;
+  margin: 6px;
+  cursor: pointer;
 }
