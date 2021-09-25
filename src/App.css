@@ -120,3 +120,42 @@ input[type=text] {
   margin: 6px;
   cursor: pointer;
 }
+
+.upload-success{
+  color: green;
+  font-size: 32px;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  width: 150px;
+  text-align: center;
+  padding: 6px;
+  margin: 6px;
+  cursor: pointer;
+}
+
+.error-msg {
+  padding-top: 24px;
+  color: #f43f1a;
+  font-weight: 800;
+}
+
+.category-bubble{
+  box-sizing: border-box;
+  display: inline-block;
+  border-radius: 18px;
+  padding: 8px;
+  margin: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 60px;
+  background: #ffb554;
+  color: #000;
+  cursor: pointer;
+}
+
+.keyword-bubble {
+  background: #36abb5;
+  color: white;
+}
