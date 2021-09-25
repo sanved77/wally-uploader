@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import "../App.css";
 import axios from 'axios';
-
-// import EveryPixel from "../EveryPixel";
+import _ from 'lodash';
 
 const Categorizer = (props) => {
     const [set, setSet] = useState(() => new Set());
@@ -10,9 +9,9 @@ const Categorizer = (props) => {
         props.links.map((ln) => {
             let temp = {};
             temp.link = ln + "";
-            temp.keywords = "N/A";
+            temp.keywords = "";
             temp.downloads = 0;
-            temp.category = "N/A";
+            temp.category = "";
             return temp;
         })
     );
@@ -26,6 +25,7 @@ const Categorizer = (props) => {
     const [categoryList, addToCategoryList] = useState([]);
     const [keywordList, addToKeywordList] = useState([]);
     const [uploadDone, setUploadDone] = useState(false);
+    const [headerFlicker, incHeaderFlicker] = useState(0);
 
     useEffect(() => {
         console.log(set);
@@ -54,7 +54,7 @@ const Categorizer = (props) => {
     };
 
     const saveMeta = () => {
-        if (keyword === "" || category === "") {
+        if (category === "") {
             setErrorMsg(true);
             return;
         }
@@ -64,6 +64,7 @@ const Categorizer = (props) => {
         tempPayload[idx].keywords = keyword;
         tempPayload[idx].category = category;
         buildPayload(tempPayload);
+
         if (!categoryList.includes(category)) {
             addToCategoryList([...categoryList, category]);
         }
@@ -92,13 +93,17 @@ const Categorizer = (props) => {
 
     const uploadPics = () => {
 
-        const tempPayload = JSON.parse(JSON.stringify(payload));
+        // const tempPayload = JSON.parse(JSON.stringify(payload));
+        const tempPayload = _.cloneDeep(payload);
         for (let i = 0; i < tempPayload.length; i++) {
-            tempPayload[i].keywords = tempPayload[i].keywords + ',' + apiKeywords[i];
+            let prevVal = tempPayload[i].keywords ? tempPayload[i].keywords + ',' : '';
+            tempPayload[i].keywords = prevVal + apiKeywords[i];
         }
+        console.log(tempPayload);
+        console.log(payload);
         buildPayload(tempPayload);
 
-        axios.post(`http://nagdibai.xyz/wally-api/${props.colName}/upload`, { payload })
+        axios.post(`http://nagdibai.xyz/wally-api/${props.colName}/upload`, { tempPayload })
         .then(res => {
             console.log(res);
             console.log(res.data);
@@ -136,39 +141,36 @@ const Categorizer = (props) => {
     const keywordAPI = (index = idx) => {
 
         if (!apiKeywords[index]) {
+
+            let headers = [
+                {'Authorization': 'Basic a1FHYUhseE1sQTNQM3JLTk9hRmNNMGY1OmlVcjUyU0NiUW00NWROaUJnSklMZDlZVUhwWGhyWnlNclBERzkzNmxVVjZQbnpWRA=='},
+                {'Authorization': 'Basic MHdyZzBOM1p4UVZWbG9EZDdVcXRZRnI1OjBxVGdEVmIzMU12UlR3dWswUlR4Zzc4VzNMV0FFZjNUakpYQ1BzazluU0ZidjRKVQ=='},
+                {'Authorization': 'Basic NVZuNmEweG04YUx2MHpZMEpuNTMzQmN5OnR2ZHBxbzJyWUJYcE5EdWZ1WEJBVmRxOGVFUVVBR0wwWkJjVFlHc3dVT3NPYXdLUA=='}
+            ];
+
             let config = {
                 method: 'get',
                 url: `https://api.everypixel.com/v1/keywords?url=${payload[index].link}&num_keywords=10`,
-                headers: { 
-                    'Authorization': 'Basic MHdyZzBOM1p4UVZWbG9EZDdVcXRZRnI1OjBxVGdEVmIzMU12UlR3dWswUlR4Zzc4VzNMV0FFZjNUakpYQ1BzazluU0ZidjRKVQ=='
-                }
+                headers: {}
             };
+            console.log("Header used - " + headerFlicker % headers.length);
+            config.headers = headers[headerFlicker % headers.length];
+            incHeaderFlicker(prev => prev+1);
 
-            const response = {"keywords":[{"keyword":"women","score":0.994975544791264},{"keyword":"beauty","score":0.9804824126708879},{"keyword":"one person","score":0.9495429289717471},{"keyword":"fashion","score":0.942619300386037},{"keyword":"caucasian ethnicity","score":0.9217276683115977},{"keyword":"portrait","score":0.9200523650091593},{"keyword":"close-up","score":0.8903242620265667},{"keyword":"young adult","score":0.8876327748998498},{"keyword":"adult","score":0.8672293618661057},{"keyword":"human face","score":0.8587813978098097}],"status":"ok"};
-
-            console.log(JSON.stringify(response));
-            const keywordList = response["keywords"]
-                .map( ele => ele["keyword"])
-                .reduce((prev, curr) => prev + ',' + curr);
-
-            const tempApiKeywords = [...apiKeywords];
-            tempApiKeywords[index] = keywordList;
-            setApiKeywords(tempApiKeywords);
-
-            // axios(config)
-            // .then(function (response) {
-            //     console.log(JSON.stringify(response.data));
-            //     const keywordList = response.data["keywords"]
-            //         .map( ele => ele["keyword"])
-            //         .reduce((prev, curr) => prev + ' ' + curr);
+            axios(config)
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+                const keywordList = response.data["keywords"]
+                    .map( ele => ele["keyword"])
+                    .reduce((prev, curr) => prev + ',' + curr);
     
-            //     const tempApiKeywords = [...apiKeywords];
-            //     tempApiKeywords[index] = keywordList;
-            //     setApiKeywords(tempApiKeywords);
-            // })
-            // .catch(function (error) {
-            //     console.log(error);
-            // });
+                const tempApiKeywords = [...apiKeywords];
+                tempApiKeywords[index] = keywordList;
+                setApiKeywords(tempApiKeywords);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 
