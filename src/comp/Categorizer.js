@@ -28,13 +28,8 @@ const Categorizer = (props) => {
     const [headerFlicker, incHeaderFlicker] = useState(0);
 
     useEffect(() => {
-        console.log(set);
         if (set.size === props.links.length) setSubmitBtn(true);
     }, [set]);
-
-    useEffect(() => {
-        console.log(apiKeywords);
-    }, [apiKeywords]);
 
     useEffect(() => {
         keywordAPI();
@@ -99,13 +94,11 @@ const Categorizer = (props) => {
             let prevVal = tempPayload[i].keywords ? tempPayload[i].keywords + ',' : '';
             tempPayload[i].keywords = prevVal + apiKeywords[i];
         }
-        console.log(tempPayload);
         console.log(payload);
         buildPayload(tempPayload);
 
         axios.post(`http://nagdibai.xyz/wally-api/${props.colName}/upload`, { tempPayload })
         .then(res => {
-            console.log(res);
             console.log(res.data);
             setUploadDone(true);
             setModalView(true);
@@ -153,7 +146,7 @@ const Categorizer = (props) => {
                 url: `https://api.everypixel.com/v1/keywords?url=${payload[index].link}&num_keywords=10`,
                 headers: {}
             };
-            console.log("Header used - " + headerFlicker % headers.length);
+            console.log("Header used - " + JSON.stringify(headers[headerFlicker % headers.length]));
             config.headers = headers[headerFlicker % headers.length];
             incHeaderFlicker(prev => prev+1);
 
