@@ -12,6 +12,7 @@ const Categorizer = (props) => {
             temp.keywords = "";
             temp.downloads = 0;
             temp.category = "";
+            temp.subCategory = "";
             return temp;
         })
     );
@@ -19,10 +20,12 @@ const Categorizer = (props) => {
     const [keyword, setKeywords] = useState("");
     const [apiKeywords, setApiKeywords] = useState([]);
     const [category, setCategory] = useState("");
+    const [subCategory, setSubCategory] = useState("");
     const [modalView, setModalView] = useState(false);
     const [submitBtn, setSubmitBtn] = useState(false);
     const [errorMsg, setErrorMsg] = useState(false);
     const [categoryList, addToCategoryList] = useState([]);
+    const [subCategoryList, addToSubCategoryList] = useState([]);
     const [keywordList, addToKeywordList] = useState([]);
     const [uploadDone, setUploadDone] = useState(false);
     const [headerFlicker, incHeaderFlicker] = useState(0);
@@ -46,10 +49,12 @@ const Categorizer = (props) => {
     const resetInput = () => {
         document.getElementById("keywords").value = "";
         document.getElementById("category").value = "";
+        document.getElementById("subCategory").value = "";
     };
 
     const saveMeta = () => {
-        if (category === "") {
+        if (category === "" || subCategory === "") {
+
             setErrorMsg(true);
             return;
         }
@@ -58,10 +63,14 @@ const Categorizer = (props) => {
         const tempPayload = JSON.parse(JSON.stringify(payload));
         tempPayload[idx].keywords = keyword;
         tempPayload[idx].category = category;
+        tempPayload[idx].subCategory = subCategory;
         buildPayload(tempPayload);
 
         if (!categoryList.includes(category)) {
             addToCategoryList([...categoryList, category]);
+        }
+        if (!subCategoryList.includes(subCategory)) {
+            addToSubCategoryList([...subCategoryList, subCategory]);
         }
         
         const keywordArr = keyword.split(",").filter(k => !keywordList.includes(k) && k !== "").map(k => k.trim());
@@ -70,6 +79,7 @@ const Categorizer = (props) => {
         }
         setKeywords("");
         setCategory("");
+        setSubCategory("");
         resetInput();
         putNext();
     };
@@ -80,6 +90,10 @@ const Categorizer = (props) => {
 
     const setCategoryListener = (e) => {
         setCategory(e.target.value);
+    };
+
+    const setSubCategoryListener = (e) => {
+        setSubCategory(e.target.value);
     };
 
     const toggleModal = () => {
@@ -109,6 +123,11 @@ const Categorizer = (props) => {
     const putCategory = (e) => {
         setCategory(e.target.innerText);
         document.getElementById("category").value = e.target.innerText;
+    }
+
+    const putSubCategory = (e) => {
+        setSubCategory(e.target.innerText);
+        document.getElementById("subCategory").value = e.target.innerText;
     }
 
     const putKeyword = (e) => {
@@ -210,6 +229,19 @@ const Categorizer = (props) => {
                     </div>
                     {
                         categoryList.map((item,i) => <p onClick={putCategory} className="category-bubble" value={item} key={i}>{item}</p>)
+                    }
+                    <div className="controller-buttons">
+                        <span>SubCategory - {payload[idx].subCategory}</span>
+                        <input
+                            id="subCategory"
+                            type="text"
+                            onChange={setSubCategoryListener}
+                            placeholder="sub category"
+                            name="sub-category"
+                        />
+                    </div>
+                    {
+                        subCategoryList.map((item,i) => <p onClick={putSubCategory} className="subcategory-bubble category-bubble" value={item} key={i}>{item}</p>)
                     }
                     <div className="controller-buttons">
                         <button

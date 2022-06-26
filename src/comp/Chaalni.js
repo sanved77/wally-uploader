@@ -1,11 +1,22 @@
 import '../App.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const Chaalni = (props) => {
 
     const REGEXEP = /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/g
 
     const [colName, setColName] = useState('');
+    const [collections, setCollections] = useState([]);
+
+    const getCollections = () => {
+        axios.get("http://nagdibai.xyz/wally-api/getCollections")
+            .then((res) => {
+                console.log(res.data)
+                setCollections(res.data)
+            })
+            .catch((err) => {console.log(err)})
+    }
 
     const filterLinks = (e) => {
         e.preventDefault();
@@ -18,23 +29,27 @@ const Chaalni = (props) => {
         }
     }
 
-    const setColNameListener = (e) => {
+    const colChange = (e) => {
         setColName(e.target.value);
-    };
+        console.log(e.target.value);
+    }
+
+    useEffect(() => {
+        getCollections()
+    }, [])
 
     return (
         <div className="Chaalni">
             <form id="filterForm" onSubmit={filterLinks}>
                 <textarea id="bloggermarkup" className="blogger-blob" cols="86" rows ="20" name="bloggermarkup" form="filterForm"></textarea>
                 <div className="controller-buttons">
-                    <input
-                        id="collection-name"
-                        type="text"
-                        onChange={setColNameListener}
-                        placeholder="put collection name"
-                        name="collection-name"
-                    />
-                    <input type="submit" value="Filter" className="button"/>
+                <select className="collections" name="dropdown" onChange={colChange}>
+                    <option key="default" value="DEFAULT">Choose a collection ...</option>
+                    {collections.map(cc => (
+                        <option key= {cc} value={cc}>{cc}</option>
+                    ))}
+                </select>
+                <input type="submit" value="Filter" className="button chaalni-btn"/>
                 </div>
             </form>
         </div>
