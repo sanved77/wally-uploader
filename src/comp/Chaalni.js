@@ -10,6 +10,7 @@ const Chaalni = (props) => {
     const [collections, setCollections] = useState([]);
     const [meta, setMeta] = useState([]);
     const [key, setKey] = useState('');
+    const [server_status, setServerStatus] = useState('SERVER ONLINE');
 
     const getCollections = () => {
         axios.get("http://nagdibai.xyz/wally-api/getCollections")
@@ -17,7 +18,11 @@ const Chaalni = (props) => {
                 console.log(res.data)
                 setCollections(res.data)
             })
-            .catch((err) => {console.log(err)})
+            .catch((err) => {
+                console.log(err);
+                setServerStatus('SERVER OFFLINE');
+                document.getElementById("server_status").style.color = "red";
+            })
     }
 
     const getMeta = () => {
@@ -121,6 +126,7 @@ const Chaalni = (props) => {
     return (
         <main>
             <div className="left-panel">
+                <p style={{color: 'green'}} id="server_status">{server_status}</p>
                 <input type="text" placeholder='key' onChange={saveKey}/>
                 {meta.map((mm, idx) => (
                     <div key={idx}>
@@ -139,7 +145,7 @@ const Chaalni = (props) => {
                             <option key="default" value="DEFAULT">Choose a collection ...</option>
                             {collections.map(cc => (
                                 <option key= {cc} value={cc}>{cc}</option>
-                            ))}
+                                ))}
                         </select>
                         <input type="submit" value="Filter" className="button chaalni-btn"/>
                         </div>
