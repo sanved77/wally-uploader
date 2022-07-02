@@ -16,6 +16,15 @@ input[type=text] {
   width: 350px;
 }
 
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.left-panel {
+  width: 500px;
+}
+
 .controller-buttons {
   margin-top: 16px;
 }
@@ -174,4 +183,18 @@ select.collections {
 .keyword-bubble {
   background: #36abb5;
   color: white;
+}
+
+.liveconfig {
+  height: 50px;
+  width: 120px;
+  margin: 0 8px;
+}
+
+.liveconfig.off {
+  background-color: #3e8e41;
+}
+
+.liveconfig.on {
+  background-color: #f43f1a
 }
