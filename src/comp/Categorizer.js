@@ -199,9 +199,9 @@ const Categorizer = (props) => {
                     {JSON.stringify(payload, null, 4)}
                 </pre>
             )}
-            {apiKeywords[idx] && <pre className="payload-peek">
-                {JSON.stringify(apiKeywords[idx], null, 4)}
-            </pre>}
+            <pre className="payload-peek">
+                {apiKeywords[idx] ? JSON.stringify(apiKeywords[idx], null, 4) : 'waiting'}
+            </pre>
             <div className="Categorizer">
                 <div className="categorizer-form-div">
                     <div className="controller-buttons">
